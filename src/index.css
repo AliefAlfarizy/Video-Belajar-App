@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #34A853;
+  --color-primary-hover: #2e964b;
+  --color-secondary: #FF9900;
+  --color-secondary-hover: #e68a00;
+  --color-accent: #F64920;
+  --color-accent-hover: #d93d18;
+  --color-bg-premium: #FFFDF3;
+  --font-heading: 'Poppins', sans-serif;
+  --font-sans: 'DM Sans', sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-premium);
+  color: #1f2937;
+}
+
+/* Scrollbar Utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Global heading font */
+h1, h2, h3 {
+  font-family: var(--font-heading);
+}
