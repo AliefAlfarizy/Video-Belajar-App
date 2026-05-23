@@ -33,11 +33,6 @@ Experience the app live: **[video-belajar-app.vercel.app](https://video-belajar-
 
 ---
 
-### 🔐 Authentication
-Clean and secure login/register interface with social login integration.
-
----
-
 ## 🛠️ Tech Stack
 
 ### Core
