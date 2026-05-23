@@ -33,12 +33,6 @@ Experience the app live: **[video-belajar-app.vercel.app](https://video-belajar-
 
 ---
 
-## 📸 Screenshots
-
-### 🏠 Homepage
-
-![Homepage](./src/assets/images/home-page.png)
-
 ### 🔐 Authentication
 Clean and secure login/register interface with social login integration.
 
@@ -309,7 +303,7 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 👨‍💻 Author
 
-**Alfariz Yalief**
+**Alief Alfarizy**
 
 - GitHub: [@alfarizyalief3-dotcom](https://github.com/alfarizyalief3-dotcom)
 - Project Link: [Video-Belajar-App](https://github.com/alfarizyalief3-dotcom/Video-Belajar-App)
@@ -330,6 +324,6 @@ This project is open source and available under the [MIT License](LICENSE).
   
   ### ⭐ Star this repo if you find it helpful!
   
-  Made with ❤️ by Alfarizy Alief
+  Made with ❤️ by Alief Alfarizy
   
 </div>
