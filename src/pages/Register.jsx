@@ -6,9 +6,13 @@ import FormSelect from '../components/atoms/FormSelect';
 import PhoneInput from '../components/atoms/PhoneInput';
 import FormDivider from '../components/molecules/FormDivider';
 import SocialButton from '../components/molecules/SocialButton';
+import ToastContainer from '../components/atoms/ToastContainer';
+import useToast from '../hooks/useToast';
+
 
 function Register() {
   const navigate = useNavigate();
+  const { toasts, showToast, removeToast } = useToast();
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -51,11 +55,36 @@ function Register() {
     return Object.keys(newErrors).length === 0;
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (handleValidate()) {
-      alert('Pendaftaran Berhasil! Silakan masuk.');
-      navigate('/login');
+      const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+
+      const emailExists = existingUsers.some(user => user.email === formData.email);
+      if (emailExists) {
+        setErrors({ email: 'Email ini sudah terdaftar, silakan gunakan email lain' });
+        return;
+      }
+
+      const newUser = {
+        fullName: formData.fullName,
+        email: formData.email,
+        gender: formData.gender,
+        phone: formData.phone,
+        password: formData.password,
+      };
+
+      localStorage.setItem('users', JSON.stringify([...existingUsers, newUser]));
+
+      showToast({
+        type: 'success',
+        title: 'Pendaftaran Berhasil!',
+        message: 'Akun kamu sudah dibuat. Silakan masuk.',
+        duration: 2500,
+      });
+
+      setTimeout(() => navigate('/login'), 1000);
     }
   };
 
@@ -66,13 +95,14 @@ function Register() {
 
   return (
     <div className="min-h-screen w-full bg-[#FAFAF5] flex flex-col">
+      <ToastContainer toasts={toasts} onClose={removeToast} />
 
       <AuthHeader />
 
       <main className="flex-1 flex items-center justify-center px-4 py-8">
         <div className="bg-white w-full max-w-[480px] rounded-2xl shadow-sm border border-gray-100 px-10 py-10">
 
-          {/* Title */}
+
           <div className="text-center mb-7">
             <h1 className="text-2xl font-bold text-gray-900 mb-1">Pendaftaran Akun</h1>
             <p className="text-sm text-gray-500">Yuk, daftarkan akunmu sekarang juga!</p>
@@ -143,22 +173,21 @@ function Register() {
               onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)}
             />
 
-            {/* Lupa Password */}
+
             <div className="flex justify-end -mt-1">
               <a href="#" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
                 Lupa Password?
               </a>
             </div>
 
-            {/* Tombol Daftar */}
+
             <button
               type="submit"
-              className="w-full py-3 rounded-lg bg-green-500 hover:bg-green-600 text-white font-semibold text-sm transition-colors"
+              className="w-full py-3 rounded-lg bg-green-500 hover:bg-green-600 text-white font-semibold text-sm transition-colors cursor-pointer"
             >
               Daftar
             </button>
 
-            {/* Tombol Masuk */}
             <Link
               to="/login"
               className="w-full py-3 rounded-lg bg-green-50 hover:bg-green-100 text-green-500 font-semibold text-sm text-center transition-colors"
@@ -171,7 +200,7 @@ function Register() {
             <SocialButton 
               provider="google" 
               text="Daftar dengan Google" 
-              onClick={() => alert('Daftar dengan Google')} 
+              onClick={() => showToast({ type: 'info', title: 'Segera Hadir', message: 'Daftar dengan Google belum tersedia.' })} 
             />
 
           </form>
@@ -181,5 +210,6 @@ function Register() {
     </div>
   );
 }
+
 
 export default Register;

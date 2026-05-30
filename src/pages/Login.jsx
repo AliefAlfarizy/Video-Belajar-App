@@ -4,9 +4,13 @@ import AuthHeader from '../components/molecules/AuthHeader';
 import FormInput from '../components/atoms/FormInput';
 import FormDivider from '../components/molecules/FormDivider';
 import SocialButton from '../components/molecules/SocialButton';
+import ToastContainer from '../components/atoms/ToastContainer';
+import useToast from '../hooks/useToast';
+
 
 function Login() {
   const navigate = useNavigate();
+  const { toasts, showToast, removeToast } = useToast();
 
   const [formData, setFormData] = useState({
     email: '',
@@ -38,20 +42,40 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (handleValidate()) {
-      alert('Login Berhasil!');
-      navigate('/');
+      const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+
+      const matchedUser = existingUsers.find(
+        user => user.email === formData.email && user.password === formData.password
+      );
+
+      if (!matchedUser) {
+        setErrors({ password: 'Email atau kata sandi salah' });
+        return;
+      }
+
+      localStorage.setItem('loggedInUser', JSON.stringify(matchedUser));
+
+      showToast({
+        type: 'success',
+        title: 'Login Berhasil!',
+        message: `Selamat datang kembali, ${matchedUser.fullName} 👋`,
+        duration: 2500,
+      });
+
+      setTimeout(() => navigate('/'), 1000);
     }
   };
 
   return (
     <div className="min-h-screen w-full bg-[#FAFAF5] flex flex-col">
+      <ToastContainer toasts={toasts} onClose={removeToast} />
       
       <AuthHeader />
 
       <main className="flex-1 flex items-center justify-center px-4 py-8">
         <div className="bg-white w-full max-w-[480px] rounded-2xl shadow-sm border border-gray-100 px-10 py-10">
 
-          {/* Title */}
+
           <div className="text-center mb-7">
             <h1 className="text-2xl font-bold text-gray-900 mb-1">Masuk ke Akun</h1>
             <p className="text-sm text-gray-500">Yuk, lanjutin belajarmu di videobelajar.</p>
@@ -81,22 +105,22 @@ function Login() {
               onTogglePassword={() => setShowPassword(!showPassword)}
             />
 
-            {/* Lupa Password */}
+
             <div className="flex justify-end -mt-1">
               <a href="#" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
                 Lupa Password?
               </a>
             </div>
 
-            {/* Tombol Masuk */}
+  
             <button
               type="submit"
-              className="w-full py-3 rounded-lg bg-green-500 hover:bg-green-600 text-white font-semibold text-sm transition-colors"
+              className="w-full py-3 rounded-lg bg-green-500 hover:bg-green-600 text-white font-semibold text-sm transition-colors cursor-pointer"
             >
               Masuk
             </button>
 
-            {/* Tombol Daftar */}
+  
             <Link
               to="/register"
               className="w-full py-3 rounded-lg bg-green-50 hover:bg-green-100 text-green-500 font-semibold text-sm text-center transition-colors"
@@ -109,7 +133,7 @@ function Login() {
             <SocialButton 
               provider="google" 
               text="Masuk dengan Google" 
-              onClick={() => alert('Masuk dengan Google')} 
+              onClick={() => showToast({ type: 'info', title: 'Segera Hadir', message: 'Login dengan Google belum tersedia.' })} 
             />
 
           </form>
@@ -119,5 +143,7 @@ function Login() {
     </div>
   );
 }
+
+
 
 export default Login;

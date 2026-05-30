@@ -8,4 +8,6 @@ function FormDivider({ text = 'atau' }) {
   );
 }
 
+
+
 export default FormDivider;

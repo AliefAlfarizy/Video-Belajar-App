@@ -15,12 +15,17 @@ function PhoneInput({
         </label>
       )}
       
+
       <div className={`flex rounded-lg border overflow-hidden ${
         error ? 'border-red-400' : 'border-gray-300'
       } focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-200 transition-all`}>
-        {/* Flag + code */}
+
+
+        {/* Bendera dan code */}
         <div className="flex items-center gap-1.5 px-3 bg-white border-r border-gray-300 shrink-0">
-          {/* Indonesia flag SVG */}
+
+          
+          {/* Indonesia flag */}
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 14" className="w-5 h-3.5 rounded-sm overflow-hidden shrink-0">
             <rect width="20" height="7" fill="#CE1126"/>
             <rect y="7" width="20" height="7" fill="#FFFFFF"/>
@@ -30,8 +35,10 @@ function PhoneInput({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </div>
+
+
         
-        {/* Phone number input */}
+        {/* Phone input */}
         <input
           type="tel"
           name={name}
@@ -42,9 +49,12 @@ function PhoneInput({
         />
       </div>
       
+
       {error && <span className="text-xs text-red-500">{error}</span>}
     </div>
   );
 }
+
+
 
 export default PhoneInput;

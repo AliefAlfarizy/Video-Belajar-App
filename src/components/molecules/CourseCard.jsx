@@ -9,10 +9,13 @@ function CourseCard({ course }) {
     price
   } = course;
 
-  // Extract rating and fill percentage
+
+
+  //  rating and  percentage
   const numericRating = parseFloat(String(rating).match(/^\d+(\.\d+)?/)?.[0] || '0');
   const ratingCount = String(rating).match(/\(([^)]+)\)/)?.[1] || '';
   const ratingFill = Math.min(Math.max(numericRating / 5, 0), 1) * 100;
+
 
   return (
     <div className="group bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col h-full">
@@ -26,8 +29,9 @@ function CourseCard({ course }) {
             />
           </div>
 
+
           <div className="min-w-0 flex-1">
-            <h3 className="text-base font-bold text-gray-900 group-hover:text-primary transition-colors duration-200 leading-snug mb-2">
+            <h3 className="text-base font-bold text-gray-900 group-hover:text-primary transition-colors duration-200 leading-snug mb-2 cursor-pointer">
               {title}
             </h3>
             <div className="flex items-center gap-3">
@@ -71,5 +75,8 @@ function CourseCard({ course }) {
     </div>
   );
 }
+
+
+
 
 export default CourseCard;

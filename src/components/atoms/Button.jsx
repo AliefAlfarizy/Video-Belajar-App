@@ -9,6 +9,7 @@ function Button({
 }) {
   const baseStyle = "flex items-center justify-center gap-3 px-6 py-3 rounded-lg font-semibold text-sm transition-all duration-200 cursor-pointer shadow-sm active:scale-98 select-none focus:outline-none focus:ring-2 focus:ring-offset-2";
   
+  
   const variants = {
     primary: "bg-primary text-white hover:bg-primary-hover focus:ring-primary disabled:bg-gray-300 disabled:cursor-not-allowed",
     brand: "bg-gradient-to-r from-green-500 to-orange-500 text-white hover:from-green-600 hover:to-orange-600 focus:ring-primary disabled:bg-gray-300 disabled:cursor-not-allowed",
@@ -16,6 +17,8 @@ function Button({
     secondary: "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 focus:ring-gray-400 disabled:opacity-50",
     google: "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:shadow-md focus:ring-gray-300 disabled:opacity-50 font-medium"
   };
+
+
 
   const widthStyle = fullWidth ? "w-full" : "w-auto";
 
@@ -26,6 +29,8 @@ function Button({
       onClick={onClick}
       disabled={disabled}
     >
+
+
       {variant === 'google' && (
         <svg className="w-5 h-5" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
           <g transform="matrix(1, 0, 0, 1, 0, 0)">
@@ -36,9 +41,14 @@ function Button({
           </g>
         </svg>
       )}
+
+
       {children}
+
     </button>
   );
 }
+
+
 
 export default Button;

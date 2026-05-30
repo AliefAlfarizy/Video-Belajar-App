@@ -1,6 +1,0 @@
-saya ingin cek project saya ini apakah sudah sesuai dengan instruksi yang akan saya sebutkan setelah ini. Jika masih ada yang belum sesuai, silahkan edit kembali tanpa harus merubah tampilan project . Berikut adalah instruksi untuk project saya ini , silahkan di cek:
-1. Slicing UI component pada masing - masing halaman login, register, dan juga hompage berdasarkan hirerki.
-    a.sebagai contoh dihalaman register kamu bisa memisahkan UI menjadi komponen card pendaftaran akun yang didalam nya memiliki komponen form nama, email, no HP, dan kata sandi. Kemudian kamu juga bisa membuat komponen button yang didalam nya terdapat button daftar masuk, dan SSO.
-    b. Bagaimana kamu melakukan slicing dibebaskan sesuai kreativitas kamu, namun kamu boleh menggunakan guide atomic desain misalnya jika memudahkan mu melakukannya.
-2. Gunakan prinsip reuseable component, sehingga untuk memasukkan data pada setiap komponen kamu bisa melakukan nya menggukan props pada child component.
-3. Implementasikan responsive menggunakan react. Kamu bisa menggunakan CSS framework yang compatible dengan React seperti Tailwind. Serta kamu bisa menerapkan react responsive library (react-responsive, reac-device, react-media).

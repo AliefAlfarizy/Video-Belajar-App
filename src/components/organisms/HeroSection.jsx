@@ -6,7 +6,7 @@ function HeroSection() {
       className="relative bg-cover bg-center py-20 sm:py-24 rounded-2xl overflow-hidden w-full max-w-300 mx-auto mt-6 md:mt-10 shadow-lg text-center"
       style={{ backgroundImage: `url(${backgroundOverlay})` }}
     >
-      {/* Dark overlay */}
+      {/* overlay */}
       <div className="absolute inset-0 bg-black/70"></div>
 
       <div className="relative z-10 px-6 sm:px-12 md:px-16 text-white flex flex-col items-center max-w-4xl mx-auto">
@@ -20,7 +20,7 @@ function HeroSection() {
 
         <a
           href="#kelas"
-          className="bg-primary hover:bg-primary-hover text-white px-6 py-3 sm:px-8 sm:py-3.5 rounded-lg font-bold transition-all shadow-md select-none outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 text-xs sm:text-sm"
+          className="bg-primary hover:bg-primary-hover text-white px-6 py-3 sm:px-8 sm:py-3.5 rounded-lg font-bold transition-all shadow-md select-none outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 text-xs sm:text-sm cursor-pointer"
         >
           Temukan Video Course untuk Dipelajari!
         </a>
@@ -28,5 +28,6 @@ function HeroSection() {
     </section>
   );
 }
+
 
 export default HeroSection;

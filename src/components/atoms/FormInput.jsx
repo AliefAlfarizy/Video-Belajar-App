@@ -19,6 +19,7 @@ function FormInput({
         </label>
       )}
       
+
       <div className={`relative flex rounded-lg border ${
         error ? 'border-red-400' : 'border-gray-300'
       } focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-200 transition-all`}>
@@ -31,6 +32,7 @@ function FormInput({
           className="flex-1 px-3 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none bg-white rounded-lg"
         />
         
+
         {showPasswordToggle && (
           <button
             type="button"
@@ -51,9 +53,12 @@ function FormInput({
         )}
       </div>
       
+
       {error && <span className="text-xs text-red-500">{error}</span>}
     </div>
   );
 }
+
+
 
 export default FormInput;

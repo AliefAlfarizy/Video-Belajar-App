@@ -11,11 +11,14 @@ function SocialLoginGroup({ mode = "login", onClickGoogle }) {
         <div className="flex-1 border-t border-gray-200"></div>
       </div>
 
+
       <Button variant="google" onClick={onClickGoogle}>
         {labelText}
       </Button>
     </div>
   );
 }
+
+
 
 export default SocialLoginGroup;

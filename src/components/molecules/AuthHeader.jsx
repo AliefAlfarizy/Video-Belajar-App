@@ -1,5 +1,6 @@
 import logoImage from '../../assets/images/Logo-videobelajar.png';
 
+
 function AuthHeader() {
   return (
     <header className="w-full bg-white px-8 py-5">
@@ -11,5 +12,7 @@ function AuthHeader() {
     </header>
   );
 }
+
+
 
 export default AuthHeader;

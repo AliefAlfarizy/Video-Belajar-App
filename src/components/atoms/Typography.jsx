@@ -13,11 +13,14 @@ function Typography({
     caption: "font-[family-name:var(--font-sans)] text-xs font-medium text-gray-400",
   };
 
+
   return (
     <Component className={`${styles[variant]} ${className}`}>
       {children}
     </Component>
   );
 }
+
+
 
 export default Typography;

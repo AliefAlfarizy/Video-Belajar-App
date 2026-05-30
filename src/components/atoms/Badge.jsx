@@ -10,11 +10,14 @@ function Badge({ children, variant = "primary" }) {
     rating: "bg-amber-50 text-amber-700 font-bold gap-1"
   };
 
+
   return (
     <span className={`${baseStyle} ${variants[variant]}`}>
       {children}
     </span>
   );
 }
+
+
 
 export default Badge;

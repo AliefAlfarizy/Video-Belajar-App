@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+
 function InputField({ 
   label, 
   type = "text", 
@@ -17,6 +18,7 @@ function InputField({
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
 
   const inputType = isPassword ? (showPassword ? "text" : "password") : type;
 
@@ -42,6 +44,7 @@ function InputField({
           } bg-white text-gray-900 placeholder-gray-400 text-sm outline-none transition-all duration-200 focus:ring-2 focus:ring-offset-0`}
         />
         
+
         {isPassword && (
           <button
             type="button"
@@ -64,6 +67,7 @@ function InputField({
         )}
       </div>
       
+
       {error && (
         <span className="text-xs text-red-500 font-medium transition-all duration-200">
           {error}
@@ -72,5 +76,7 @@ function InputField({
     </div>
   );
 }
+
+
 
 export default InputField;

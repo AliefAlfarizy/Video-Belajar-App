@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import logoImage from '../../assets/images/Logo-footer.png';
 
+
 function Footer() {
   const [activeAccordion, setActiveAccordion] = useState(null);
 
   const toggleAccordion = (index) => {
     setActiveAccordion(activeAccordion === index ? null : index);
   };
+
 
   const categories = [
     { name: 'Digital & Teknologi', link: '#' },
@@ -15,6 +17,7 @@ function Footer() {
     { name: 'Pengembangan Diri', link: '#' },
     { name: 'Desain', link: '#' },
   ];
+
 
   const company = [
     { name: 'Tentang Kami', link: '#' },
@@ -66,6 +69,7 @@ function Footer() {
     },
   ];
 
+
   return (
     <footer className="w-full bg-white text-gray-700 pt-12 pb-8 border-t border-gray-100">
       <div className="max-w-6xl mx-auto px-6 lg:px-8">
@@ -92,13 +96,13 @@ function Footer() {
           {/* Spacer */}
           <div className="flex-1" />
 
-          {/* Column 2: Kategori */}
+          {/* Kolom 2: Kategori */}
           <div className="flex flex-col gap-3">
             <h4 className="text-sm font-bold text-gray-800">Kategori</h4>
             <ul className="flex flex-col gap-2 text-sm text-gray-500">
               {categories.map((cat, idx) => (
                 <li key={idx}>
-                  <a href={cat.link} className="hover:text-orange-500 transition-colors">
+                  <a href={cat.link} className="hover:text-orange-500 transition-colors cursor-pointer">
                     {cat.name}
                   </a>
                 </li>
@@ -106,13 +110,13 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Perusahaan */}
+          {/* Kolom 3: Perusahaan */}
           <div className="flex flex-col gap-3">
             <h4 className="text-sm font-bold text-gray-800">Perusahaan</h4>
             <ul className="flex flex-col gap-2 text-sm text-gray-500">
               {company.map((co, idx) => (
                 <li key={idx}>
-                  <a href={co.link} className="hover:text-orange-500 transition-colors">
+                  <a href={co.link} className="hover:text-orange-500 transition-colors cursor-pointer">
                     {co.name}
                   </a>
                 </li>
@@ -120,13 +124,13 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Komunitas */}
+          {/* Kolom 4: Komunitas */}
           <div className="flex flex-col gap-3">
             <h4 className="text-sm font-bold text-gray-800">Komunitas</h4>
             <ul className="flex flex-col gap-2 text-sm text-gray-500">
               {community.map((comm, idx) => (
                 <li key={idx}>
-                  <a href={comm.link} className="hover:text-orange-500 transition-colors">
+                  <a href={comm.link} className="hover:text-orange-500 transition-colors cursor-pointer">
                     {comm.name}
                   </a>
                 </li>
@@ -137,6 +141,7 @@ function Footer() {
 
         {/* ── MOBILE FOOTER ── */}
         <div className="md:hidden flex flex-col mb-8 gap-1">
+
           {/* Brand info */}
           <div className="flex flex-col gap-2 mb-6">
             <img src={logoImage} alt="Logo VideoBelajar" className="h-6 w-auto object-contain object-left mb-3" />
@@ -147,7 +152,7 @@ function Footer() {
             <p className="text-xs text-gray-500">+62-877-7123-1234</p>
           </div>
 
-          {/* Accordion: Kategori */}
+          {/* Kategori */}
           <div className="border-b border-gray-100 py-3">
             <button
               onClick={() => toggleAccordion(1)}
@@ -161,13 +166,13 @@ function Footer() {
             {activeAccordion === 1 && (
               <ul className="flex flex-col gap-2 mt-3 text-sm text-gray-500 pl-1">
                 {categories.map((cat, idx) => (
-                  <li key={idx}><a href={cat.link} className="hover:text-orange-500 transition-colors">{cat.name}</a></li>
+                  <li key={idx}><a href={cat.link} className="hover:text-orange-500 transition-colors cursor-pointer">{cat.name}</a></li>
                 ))}
               </ul>
             )}
           </div>
 
-          {/* Accordion: Perusahaan */}
+          {/* Perusahaan */}
           <div className="border-b border-gray-100 py-3">
             <button
               onClick={() => toggleAccordion(2)}
@@ -181,13 +186,13 @@ function Footer() {
             {activeAccordion === 2 && (
               <ul className="flex flex-col gap-2 mt-3 text-sm text-gray-500 pl-1">
                 {company.map((co, idx) => (
-                  <li key={idx}><a href={co.link} className="hover:text-orange-500 transition-colors">{co.name}</a></li>
+                  <li key={idx}><a href={co.link} className="hover:text-orange-500 transition-colors cursor-pointer">{co.name}</a></li>
                 ))}
               </ul>
             )}
           </div>
 
-          {/* Accordion: Komunitas */}
+          {/* Komunitas */}
           <div className="border-b border-gray-100 py-3">
             <button
               onClick={() => toggleAccordion(3)}
@@ -201,14 +206,14 @@ function Footer() {
             {activeAccordion === 3 && (
               <ul className="flex flex-col gap-2 mt-3 text-sm text-gray-500 pl-1">
                 {community.map((comm, idx) => (
-                  <li key={idx}><a href={comm.link} className="hover:text-orange-500 transition-colors">{comm.name}</a></li>
+                  <li key={idx}><a href={comm.link} className="hover:text-orange-500 transition-colors cursor-pointer">{comm.name}</a></li>
                 ))}
               </ul>
             )}
           </div>
         </div>
 
-        {/* ── BOTTOM BAR: Copyright & Socials ── */}
+        {/* ── Copyright dan Socials ── */}
         <div className="pt-6 border-t border-gray-100 flex flex-col-reverse md:flex-row items-center justify-between gap-4 text-xs text-gray-400">
           <p className="text-center md:text-left">
             @2023 Gerobak Sayur All Rights Reserved.
@@ -219,7 +224,7 @@ function Footer() {
               <a
                 key={idx}
                 href="#"
-                className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 text-gray-500 hover:text-white hover:bg-orange-500 hover:border-orange-500 transition-all"
+                className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 text-gray-500 hover:text-white hover:bg-orange-500 hover:border-orange-500 transition-all cursor-pointer"
                 aria-label={soc.name}
               >
                 {soc.icon}
@@ -232,5 +237,7 @@ function Footer() {
     </footer>
   );
 }
+
+
 
 export default Footer;

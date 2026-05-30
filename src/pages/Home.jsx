@@ -1,11 +1,14 @@
+import { useState, useEffect } from 'react';
 import Navbar from '../components/organisms/Navbar.jsx';
 import HeroSection from '../components/organisms/HeroSection.jsx';
 import CourseSection from '../components/organisms/CourseSection.jsx';
 import NewsletterSection from '../components/organisms/NewsletterSection.jsx';
 import Footer from '../components/organisms/Footer.jsx';
 
+
 function Home() {
-  const initialCourses = [
+  //  data courses
+  const initialCoursesData = [
     {
       id: 1,
       image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=600&auto=format&fit=crop',
@@ -98,22 +101,49 @@ function Home() {
     },
   ];
 
+
+  const [courses, setCourses] = useState([]);
+
+
+  useEffect(() => {
+    const savedCourses = localStorage.getItem('adminCourses');
+    if (savedCourses) {
+      setCourses(JSON.parse(savedCourses));
+    } else {
+      setCourses(initialCoursesData);
+      localStorage.setItem('adminCourses', JSON.stringify(initialCoursesData));
+    }
+  }, []);
+
+
+  useEffect(() => {
+    const handleFocus = () => {
+      const savedCourses = localStorage.getItem('adminCourses');
+      if (savedCourses) {
+        setCourses(JSON.parse(savedCourses));
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen bg-bg-premium antialiased">
-      {/* Navigation Bar */}
+
       <Navbar />
 
-      {/* Main Content Areas */}
+
       <main className="flex flex-col flex-1 w-full pb-10">
         <HeroSection />
-        <CourseSection courses={initialCourses} />
+        <CourseSection courses={courses} />
         <NewsletterSection />
       </main>
 
-      {/* Footer Area */}
       <Footer />
     </div>
   );
 }
+
 
 export default Home;
