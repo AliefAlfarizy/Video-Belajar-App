@@ -55,7 +55,7 @@ function CourseSection({ courses = [] }) {
               onClick={() => setSelectedCategory(cat.name)}
               className={`pb-3 text-sm sm:text-base font-semibold cursor-pointer border-b-2 transition-all duration-200 outline-none select-none ${
                 selectedCategory === cat.name
-                  ? 'text-[#F64920] border-[#F64920]'
+                  ? 'text-accent border-accent'
                   : 'text-gray-500 border-transparent hover:text-gray-900 hover:border-gray-300'
               }`}
             >
