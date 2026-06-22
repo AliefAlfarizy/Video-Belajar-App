@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/atoms/Button';
 import FormInput from '../components/atoms/FormInput';
@@ -6,11 +6,12 @@ import Badge from '../components/atoms/Badge';
 import ConfirmDialog from '../components/atoms/ConfirmDialog';
 import ToastContainer from '../components/atoms/ToastContainer';
 import useToast from '../hooks/useToast';
+import useCourses from '../hooks/useCourses';
 
 function Admin() {
   const navigate = useNavigate();
-  const { toasts, showToast, removeToast } = useToast();
-  const [courses, setCourses] = useState([]);
+  const { toasts, removeToast } = useToast();
+  const { courses, addCourse, updateCourse, removeCourse } = useCourses();
   const [showModal, setShowModal] = useState(false);
   const [editingCourse, setEditingCourse] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null); // stores course id to delete
@@ -25,43 +26,7 @@ function Admin() {
   });
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    const savedCourses = JSON.parse(localStorage.getItem('adminCourses') || '[]');
-    if (savedCourses.length === 0) {
-      const defaultCourses = [
-        {
-          id: 1,
-          image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=600&auto=format&fit=crop',
-          title: 'Big 4 Auditor Financial Analyst',
-          description: 'Pelajari cara kerja auditor profesional di perusahaan Big 4 dan kuasai analisis laporan keuangan dari nol hingga mahir.',
-          mentor: 'Jenna Ortega',
-          jobTitle: 'Senior Accountant di Gojek',
-          price: 'Rp 300K',
-          rating: '4.8 (1.2K)',
-        },
-        {
-          id: 2,
-          image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=600&auto=format&fit=crop',
-          title: 'UI/UX Design Mastery dengan Figma',
-          description: 'Kuasai desain antarmuka modern menggunakan Figma, dari wireframe hingga prototype interaktif yang siap presentasi.',
-          mentor: 'Rina Kusuma',
-          jobTitle: 'Lead UI/UX Designer di Tokopedia',
-          price: 'Rp 450K',
-          rating: '4.9 (3.4K)',
-        },
-      ];
-      localStorage.setItem('adminCourses', JSON.stringify(defaultCourses));
-      setCourses(defaultCourses);
-    } else {
-      setCourses(savedCourses);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (courses.length > 0) {
-      localStorage.setItem('adminCourses', JSON.stringify(courses));
-    }
-  }, [courses]);
+  // Data now comes from API via useCourses hook
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -111,14 +76,18 @@ function Admin() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!validate()) return;
-    if (editingCourse) {
-      setCourses(prev => prev.map(c => c.id === editingCourse.id ? { ...formData, id: editingCourse.id } : c));
-      showToast({ type: 'success', title: 'Kelas Diperbarui', message: `"${formData.title}" berhasil disimpan.` });
-    } else {
-      setCourses(prev => [...prev, { ...formData, id: Date.now() }]);
-      showToast({ type: 'success', title: 'Kelas Ditambahkan', message: `"${formData.title}" berhasil ditambahkan.` });
-    }
-    handleCloseModal();
+    (async () => {
+      try {
+        if (editingCourse) {
+          await updateCourse(editingCourse.id, formData);
+        } else {
+          await addCourse(formData);
+        }
+        handleCloseModal();
+      } catch (err) {
+        console.error(err);
+      }
+    })();
   };
 
   const handleDelete = (id) => {
@@ -126,9 +95,15 @@ function Admin() {
   };
 
   const handleConfirmDelete = () => {
-    setCourses(prev => prev.filter(c => c.id !== confirmDelete));
-    showToast({ type: 'success', title: 'Kelas Dihapus', message: 'Kelas berhasil dihapus dari daftar.' });
-    setConfirmDelete(null);
+    (async () => {
+      try {
+        await removeCourse(confirmDelete);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setConfirmDelete(null);
+      }
+    })();
   };
 
   return (
@@ -148,8 +123,8 @@ function Admin() {
       {/* Page Header */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-10 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-sm">
+            <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-linear-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-sm">
               <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
