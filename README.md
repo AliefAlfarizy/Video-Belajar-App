@@ -2,7 +2,11 @@
 
 Platform pembelajaran online berbasis video untuk meningkatkan skill dan pengetahuan.
 
-## Tech 
+# Video Belajar App Vercel
+
+[link-vercel](https://video-belajar-app.vercel.app/)
+
+## Tech
 
 - React 19
 - Vite
@@ -20,3 +24,6 @@ Platform pembelajaran online berbasis video untuk meningkatkan skill dan pengeta
 
 Aplikasi akan berjalan di `http://localhost:5173`
 
+## Konfigurasi Environment (env)
+
+VITE_API_BASE_URL=https://6a39283d64a2d826922382f5.mockapi.io
