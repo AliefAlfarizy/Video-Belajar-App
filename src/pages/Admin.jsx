@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { getData, addData, editData, deleteData } from '../services/api';
 import Button from '../components/atoms/Button';
 import FormInput from '../components/atoms/FormInput';
 import Badge from '../components/atoms/Badge';
@@ -10,11 +12,17 @@ import useCourses from '../hooks/useCourses';
 
 function Admin() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { toasts, removeToast } = useToast();
-  const { courses, addCourse, updateCourse, removeCourse } = useCourses();
+  const { courses: hookCourses, addCourse, updateCourse, removeCourse } = useCourses();
+  
+  // Mengambil data dari Redux Store
+  const reduxCourses = useSelector((state) => state.courses || []);
+  const courses = reduxCourses.length > 0 ? reduxCourses : hookCourses;
+
   const [showModal, setShowModal] = useState(false);
   const [editingCourse, setEditingCourse] = useState(null);
-  const [confirmDelete, setConfirmDelete] = useState(null); // stores course id to delete
+  const [confirmDelete, setConfirmDelete] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -26,13 +34,12 @@ function Admin() {
   });
   const [errors, setErrors] = useState({});
 
-  // Data now comes from API via useCourses hook
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
+
 
   const validate = () => {
     const newErrors = {};

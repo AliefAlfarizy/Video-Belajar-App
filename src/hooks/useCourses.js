@@ -1,19 +1,31 @@
-import { useState, useEffect } from "react";
-import courseAPI from "../services/courseAPI";
+import { useState, useEffect, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { getData, addData, editData, deleteData } from "../services/api";
+import {
+  setCourses,
+  addCourse as addCourseRedux,
+  updateCourse as updateCourseRedux,
+  deleteCourse as deleteCourseRedux,
+} from "../store/redux/coursesSlice";
 import useToast from "./useToast";
 
 export default function useCourses() {
   const { showToast } = useToast();
-  const [courses, setCourses] = useState([]);
+  const dispatch = useDispatch();
+
+  // Mengambil data dari state Redux
+  const courses = useSelector((state) => state.courses || []);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchCourses = async () => {
+  const fetchCourses = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await courseAPI.getCourses();
-      setCourses(Array.isArray(res.data) ? res.data : []);
+      const res = await getData();
+      const courseData = Array.isArray(res.data) ? res.data : [];
+      dispatch(setCourses(courseData));
     } catch (err) {
       setError(err);
       showToast({
@@ -24,17 +36,19 @@ export default function useCourses() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dispatch, showToast]);
 
   useEffect(() => {
-    fetchCourses();
-  }, []);
+    if (courses.length === 0) {
+      fetchCourses();
+    }
+  }, [fetchCourses, courses.length]);
 
   const addCourse = async (payload) => {
     setLoading(true);
     try {
-      const res = await courseAPI.createCourse(payload);
-      setCourses((prev) => [...prev, res.data]);
+      const res = await addData(payload);
+      dispatch(addCourseRedux(res.data));
       showToast({
         type: "success",
         title: "Kelas Ditambahkan",
@@ -56,10 +70,8 @@ export default function useCourses() {
   const updateCourse = async (id, payload) => {
     setLoading(true);
     try {
-      const res = await courseAPI.updateCourse(id, payload);
-      setCourses((prev) =>
-        prev.map((c) => (String(c.id) === String(id) ? res.data : c)),
-      );
+      const res = await editData(id, payload);
+      dispatch(updateCourseRedux(res.data));
       showToast({
         type: "success",
         title: "Kelas Diperbarui",
@@ -81,8 +93,8 @@ export default function useCourses() {
   const removeCourse = async (id) => {
     setLoading(true);
     try {
-      await courseAPI.deleteCourse(id);
-      setCourses((prev) => prev.filter((c) => String(c.id) !== String(id)));
+      await deleteData(id);
+      dispatch(deleteCourseRedux(id));
       showToast({
         type: "success",
         title: "Kelas Dihapus",
