@@ -1,14 +1,17 @@
 import * as courseService from '../services/courseService.js';
 
 /**
- * Controller 1: GET /course - Mendapatkan daftar semua course
+ * Controller 1: GET /course - Mendapatkan daftar semua course (Mendukung Query Params: search, level, sort)
  */
 export async function getCoursesHandler(req, res) {
     try {
-        const courses = await courseService.getAllCourses();
+        const { search, level, sort } = req.query;
+        const courses = await courseService.getAllCourses({ search, level, sort });
+
         return res.status(200).json({
             success: true,
             message: 'Berhasil mengambil daftar course',
+            filters: { search: search || null, level: level || null, sort: sort || 'default' },
             total: courses.length,
             data: courses
         });
@@ -59,7 +62,6 @@ export async function addCourseHandler(req, res) {
     try {
         const { title, description, price } = req.body;
 
-        // Validasi Payload
         if (!title || !description || price === undefined || price === null) {
             return res.status(400).json({
                 success: false,
@@ -84,7 +86,7 @@ export async function addCourseHandler(req, res) {
 }
 
 /**
- * Controller 4: PATCH /course/:id (atau PUT) - Mengubah data course spesifik (UPDATE DML)
+ * Controller 4: PATCH /course/:id - Mengubah data course spesifik (UPDATE DML)
  */
 export async function updateCourseHandler(req, res) {
     try {

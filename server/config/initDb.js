@@ -12,14 +12,26 @@ export async function initDatabase() {
 
     let connection;
     try {
-        // 1. Hubungkan ke MySQL server tanpa menentukan database terlebih dahulu
         connection = await mysql.createConnection({ host, port, user, password });
 
-        // 2. Buat database jika belum ada
         await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\`;`);
         await connection.query(`USE \`${dbName}\`;`);
 
-        // 3. Buat tabel categories jika belum ada
+        // 1. Buat tabel users jika belum ada
+        await connection.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                fullname VARCHAR(100) NOT NULL,
+                username VARCHAR(50) NOT NULL UNIQUE,
+                email VARCHAR(255) NOT NULL UNIQUE,
+                password VARCHAR(255) NOT NULL,
+                role ENUM('student', 'tutor', 'admin') DEFAULT 'student',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            );
+        `);
+
+        // 2. Buat tabel categories jika belum ada
         await connection.query(`
             CREATE TABLE IF NOT EXISTS categories (
                 id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -31,10 +43,11 @@ export async function initDatabase() {
             );
         `);
 
-        // 4. Buat tabel tutors jika belum ada
+        // 3. Buat tabel tutors jika belum ada
         await connection.query(`
             CREATE TABLE IF NOT EXISTS tutors (
                 id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                user_id BIGINT NULL UNIQUE,
                 name VARCHAR(100) NOT NULL,
                 headline VARCHAR(150) NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -42,7 +55,7 @@ export async function initDatabase() {
             );
         `);
 
-        // 5. Buat tabel courses jika belum ada
+        // 4. Buat tabel courses jika belum ada
         await connection.query(`
             CREATE TABLE IF NOT EXISTS courses (
                 id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -60,7 +73,7 @@ export async function initDatabase() {
             );
         `);
 
-        // 6. Masukkan seed data jika tabel courses masih kosong
+        // 5. Seed initial data
         const [rows] = await connection.query(`SELECT COUNT(*) as count FROM courses;`);
         if (rows[0].count === 0) {
             await connection.query(`
@@ -72,7 +85,7 @@ export async function initDatabase() {
             console.log(`[DB INIT] Seed data berhasil dimasukkan ke tabel 'courses'.`);
         }
 
-        console.log(`[DB INIT] Inisialisasi Database '${dbName}' & Tabel 'courses' berhasil!`);
+        console.log(`[DB INIT] Inisialisasi Database '${dbName}' & Tabel ('users', 'courses') berhasil!`);
         return true;
     } catch (error) {
         console.warn(`[DB INIT WARNING] Tidak dapat melakukan inisialisasi otomatis MySQL: ${error.message}`);

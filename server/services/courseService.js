@@ -1,6 +1,6 @@
 import pool, { testConnection } from '../config/db.js';
 
-// Backup In-Memory Data Store jika database MySQL offline/belum aktif saat pengujian
+// In-Memory Data Store fallback
 let inMemoryCourses = [
     {
         id: 1,
@@ -49,25 +49,78 @@ let inMemoryCourses = [
 let nextInMemoryId = 4;
 
 /**
- * Service 1: SELECT (Ambil Semua Data Courses)
- * Query SQL DML: SELECT * FROM courses
+ * Service 1: SELECT dengan Query Params (Filter, Search, & Sort)
+ * Supports: ?search=keyword & level=beginner & sort=price_asc
  */
-export async function getAllCourses() {
+export async function getAllCourses({ search, level, sort } = {}) {
     try {
         const isDbConnected = await testConnection();
         if (isDbConnected) {
-            const [rows] = await pool.query('SELECT * FROM courses ORDER BY id ASC');
+            let sql = 'SELECT * FROM courses WHERE 1=1';
+            const params = [];
+
+            // 1. Search Query Param
+            if (search) {
+                sql += ' AND (title LIKE ? OR description LIKE ?)';
+                const term = `%${search}%`;
+                params.push(term, term);
+            }
+
+            // 2. Filter Query Param (level)
+            if (level) {
+                sql += ' AND level = ?';
+                params.push(level);
+            }
+
+            // 3. Sort Query Param
+            if (sort === 'price_asc') {
+                sql += ' ORDER BY price ASC';
+            } else if (sort === 'price_desc') {
+                sql += ' ORDER BY price DESC';
+            } else if (sort === 'title_asc') {
+                sql += ' ORDER BY title ASC';
+            } else if (sort === 'latest') {
+                sql += ' ORDER BY id DESC';
+            } else {
+                sql += ' ORDER BY id ASC';
+            }
+
+            const [rows] = await pool.query(sql, params);
             return rows;
         }
     } catch (err) {
         console.warn(`[Service] Menggunakan fallback in-memory untuk getAllCourses: ${err.message}`);
     }
-    return inMemoryCourses;
+
+    // In-memory Filtering, Searching, Sorting Fallback
+    let result = [...inMemoryCourses];
+
+    if (search) {
+        const term = search.toLowerCase();
+        result = result.filter(c => c.title.toLowerCase().includes(term) || c.description.toLowerCase().includes(term));
+    }
+
+    if (level) {
+        result = result.filter(c => c.level.toLowerCase() === level.toLowerCase());
+    }
+
+    if (sort === 'price_asc') {
+        result.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+    } else if (sort === 'price_desc') {
+        result.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+    } else if (sort === 'title_asc') {
+        result.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (sort === 'latest') {
+        result.sort((a, b) => b.id - a.id);
+    } else {
+        result.sort((a, b) => a.id - b.id);
+    }
+
+    return result;
 }
 
 /**
- * Service 2: SELECT by ID (Ambil Satu Data Course Spesifik Berdasarkan ID)
- * Query SQL DML: SELECT * FROM courses WHERE id = ?
+ * Service 2: SELECT by ID
  */
 export async function getCourseById(id) {
     const courseId = parseInt(id, 10);
@@ -84,8 +137,7 @@ export async function getCourseById(id) {
 }
 
 /**
- * Service 3: INSERT / ADD (Menambahkan Data Course Baru)
- * Query SQL DML: INSERT INTO courses (title, slug, description, price, discount_price, level, is_published) VALUES (?, ?, ?, ?, ?, ?, ?)
+ * Service 3: INSERT / ADD
  */
 export async function createCourse(data) {
     const {
@@ -110,7 +162,6 @@ export async function createCourse(data) {
             const values = [category_id, tutor_id, title, slug, description, price, discount_price, level, is_published ? 1 : 0];
             const [result] = await pool.query(query, values);
             
-            // Ambil data yang baru saja disisipkan (SELECT by Inserted ID)
             const [newRows] = await pool.query('SELECT * FROM courses WHERE id = ?', [result.insertId]);
             return newRows[0];
         }
@@ -118,7 +169,6 @@ export async function createCourse(data) {
         console.warn(`[Service] Menggunakan fallback in-memory untuk createCourse: ${err.message}`);
     }
 
-    // In-memory fallback
     const newCourse = {
         id: nextInMemoryId++,
         category_id,
@@ -138,14 +188,13 @@ export async function createCourse(data) {
 }
 
 /**
- * Service 4: UPDATE (Mengubah Data Course Spesifik Berdasarkan ID)
- * Query SQL DML: UPDATE courses SET ... WHERE id = ?
+ * Service 4: UPDATE
  */
 export async function updateCourse(id, data) {
     const courseId = parseInt(id, 10);
     const existing = await getCourseById(courseId);
     if (!existing) {
-        return null; // Data tidak ditemukan
+        return null;
     }
 
     try {
@@ -199,7 +248,6 @@ export async function updateCourse(id, data) {
             const query = `UPDATE courses SET ${fields.join(', ')} WHERE id = ?`;
             await pool.query(query, values);
 
-            // Ambil data yang sudah diupdate
             const [updatedRows] = await pool.query('SELECT * FROM courses WHERE id = ?', [courseId]);
             return updatedRows[0];
         }
@@ -207,7 +255,6 @@ export async function updateCourse(id, data) {
         console.warn(`[Service] Menggunakan fallback in-memory untuk updateCourse: ${err.message}`);
     }
 
-    // In-memory fallback update
     const index = inMemoryCourses.findIndex(c => c.id === courseId);
     if (index !== -1) {
         inMemoryCourses[index] = {
@@ -223,8 +270,7 @@ export async function updateCourse(id, data) {
 }
 
 /**
- * Service 5: DELETE (Menghapus Data Course Spesifik Berdasarkan ID)
- * Query SQL DML: DELETE FROM courses WHERE id = ?
+ * Service 5: DELETE
  */
 export async function deleteCourse(id) {
     const courseId = parseInt(id, 10);
@@ -243,7 +289,6 @@ export async function deleteCourse(id) {
         console.warn(`[Service] Menggunakan fallback in-memory untuk deleteCourse: ${err.message}`);
     }
 
-    // In-memory fallback delete
     const index = inMemoryCourses.findIndex(c => c.id === courseId);
     if (index !== -1) {
         inMemoryCourses.splice(index, 1);
