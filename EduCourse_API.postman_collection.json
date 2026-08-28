@@ -1,0 +1,133 @@
+{
+	"info": {
+		"_postman_id": "e4d3c2b1-0000-4000-a000-educourseapp",
+		"name": "EduCourse REST API Collection",
+		"description": "Postman Collection untuk Pengujian REST API EduCourse App (Node.js, Express, MySQL DML).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Get All Courses",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/course",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"course"
+					]
+				},
+				"description": "Endpoint GET untuk mengambil semua list data courses/kelas."
+			},
+			"response": []
+		},
+		{
+			"name": "2. Get Course by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/course/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"course",
+						"1"
+					]
+				},
+				"description": "Endpoint GET untuk menampilkan satu course/kelas spesifik berdasarkan id."
+			},
+			"response": []
+		},
+		{
+			"name": "3. Add New Course (POST)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"Fullstack JavaScript Engineer Roadmap\",\n  \"slug\": \"fullstack-javascript-engineer-roadmap\",\n  \"description\": \"Panduan lengkap menjadi Fullstack Developer menggunakan Express.js, React 19, dan PostgreSQL.\",\n  \"price\": 350000,\n  \"discount_price\": 299000,\n  \"level\": \"intermediate\",\n  \"is_published\": 1\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/course",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"course"
+					]
+				},
+				"description": "Endpoint POST untuk menambahkan data course/kelas baru (INSERT DML)."
+			},
+			"response": []
+		},
+		{
+			"name": "4. Update Course by ID (PATCH)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"price\": 275000,\n  \"discount_price\": 210000,\n  \"level\": \"advanced\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:5000/course/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"course",
+						"1"
+					]
+				},
+				"description": "Endpoint PATCH untuk mengubah sebagian atribut data course/kelas berdasarkan id (UPDATE DML)."
+			},
+			"response": []
+		},
+		{
+			"name": "5. Delete Course by ID (DELETE)",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5000/course/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"course",
+						"3"
+					]
+				},
+				"description": "Endpoint DELETE untuk menghapus data course/kelas berdasarkan id (DELETE DML)."
+			},
+			"response": []
+		}
+	]
+}
